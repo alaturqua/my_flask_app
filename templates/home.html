@@ -3,7 +3,12 @@
 {% block body %}
     <div class="jumbotron text-center">
     <h1>My Flask App</h1>
-        <a href="/register"><button class="btn btn-primary btn-lg">Register</button></a>
-        <a href="/login"><button class="btn btn-success btn-lg">Login</button></a>
+        {% if session.logged_in %}
+            <a href="{{ url_for('add_article') }}" class="btn btn-success btn-lg">Add Article</a>
+
+        {% else %}
+        <a href="/register" class="btn btn-primary btn-lg">Register</a>
+        <a href="/login" class="btn btn-success btn-lg">Login</a>
+    {% endif %}
     </div>
 {% endblock body %}

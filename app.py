@@ -7,6 +7,9 @@ from config import app, db
 from forms import RegisterForm, ArticleForm
 from models import Users, Articles
 
+from werkzeug.contrib.fixers import ProxyFix
+
+app = app
 db.init_app(app)
 db.create_all()
 
@@ -177,6 +180,6 @@ def delete_article(id):
         error = "Article was not deleted!"
         return render_template('dashboard.html', error=error)
 
-
+app.wsgi_app = ProxyFix(app.wsgi_app)
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
