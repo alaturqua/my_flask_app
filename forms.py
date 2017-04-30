@@ -15,7 +15,7 @@ class RegisterForm(FlaskForm):
     confirm = PasswordField('Confirm Password')
 
 
-# TODO: ArticleForm
-class ArticleForm(FlaskForm):
+# TODO: VideoForm
+class VideoForm(FlaskForm):
     title = StringField(label='Title', validators=[validators.Length(min=1, max=200)])
-    body = TextAreaField(label='Body', validators=[validators.Length(min=30)])
+    link = StringField(label='Link', validators=[validators.Length(min=1)])

@@ -4,8 +4,8 @@ from flask import render_template, flash, request, redirect, url_for, session
 from passlib.hash import sha256_crypt
 
 from config import app, db
-from forms import RegisterForm, ArticleForm
-from models import Users, Articles
+from forms import RegisterForm, VideoForm
+from models import Users, Videos
 
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -91,95 +91,93 @@ def logout():
     return redirect(url_for('login'))
 
 
-# TODO: Articles
-@app.route('/articles')
-def articles():
-    data = Articles.query.all()
+# TODO: Videos
+@app.route('/videos')
+def videos():
+    data = Videos.query.all()
     if len(data) > 0:
-        return render_template('articles.html', articles=data)
+        return render_template('videos.html', videos=data)
     else:
-        msg = 'No Articles Found'
-        return render_template('articles.html', msg=msg)
+        msg = 'No Videos Found'
+        return render_template('videos.html', msg=msg)
 
 
-# TODO: Article Details
-@app.route('/article/<int:id>/')
-def article(id):
-    data = Articles.query.get(id)
+# TODO: Video Details
+@app.route('/video/<int:id>/')
+def video(id):
+    data = Videos.query.get(id)
     app.logger.info(data)
     if data:
-        return render_template('article.html', article=data)
+        return render_template('video.html', video=data)
     else:
-        msg = "No article found!"
-        return render_template('article.html', msg=msg)
+        msg = "No video found!"
+        return render_template('video.html', msg=msg)
 
 
-# TODO: Add Article
-@app.route('/add_article', methods=["GET", "POST"])
+# TODO: Add Video
+@app.route('/add_video', methods=["GET", "POST"])
 @login_required
-def add_article():
-    form = ArticleForm(request.form)
-    app.logger.info(request.method)
-    app.logger.info(form.errors)
+def add_video():
+    form = VideoForm(request.form)
     if request.method == "POST" and form.validate():
         title = form.title.data
-        body = form.body.data
+        link = form.link.data
         author = session['username']
-        article = Articles(title, body, author)
-        db.session.add(article)
+        video = Videos(title, link, author)
+        db.session.add(video)
         db.session.commit()
-        flash("Article Created", "success")
+        flash("Video created", "success")
         return redirect(url_for('dashboard'))
     else:
         error = form.errors
-        return render_template('add_article.html', form=form, error=error)
-    return render_template('add_article.html', form=form)
+        return render_template('add_video.html', form=form, error=error)
+    return render_template('add_video.html', form=form)
 
 
 # TODO: Dashboard
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    data = Articles.query.all()
+    data = Videos.query.all()
     if len(data) > 0:
-        return render_template('dashboard.html', articles=data)
+        return render_template('dashboard.html', videos=data)
     else:
-        msg = 'No Articles Found'
+        msg = 'No Videos Found'
         return render_template('dashboard.html', msg=msg)
 
 
 # TODO: Edit Article
-@app.route('/edit_article/<string:id>/', methods=['GET', 'POST'])
+@app.route('/edit_video/<string:id>/', methods=['GET', 'POST'])
 @login_required
-def edit_article(id):
-    data = Articles.query.get(id)
-    form = ArticleForm(request.form)
+def edit_video(id):
+    data = Videos.query.get(id)
+    form = VideoForm(request.form)
 
     form.title.data = data.title
-    form.title.body = data.body
+    form.title.link = data.link
     if request.method == 'POST' and form.validate():
         data.title = request.form["title"]
-        data.body = request.form["body"]
+        data.link = request.form["link"]
         db.session.commit()
-        flash("Article updated!", "success")
+        flash("Video updated!", "success")
         return redirect(url_for('dashboard'))
-    return render_template('edit_article.html', form=form)
+    return render_template('edit_video.html', form=form)
 
 
-# TODO: Delete Article
-@app.route('/delete_article/<int:id>', methods=['GET', 'POST'])
+# TODO: Delete Video
+@app.route('/delete_video/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_article(id):
-    data = Articles.query.get(id)
+def delete_video(id):
+    data = Videos.query.get(id)
     if data:
         db.session.delete(data)
         db.session.commit()
-        msg = "Article deleted!"
+        msg = "Video deleted!"
         return render_template('dashboard.html', msg=msg)
     else:
-        error = "Article was not deleted!"
+        error = "Video was not deleted!"
         return render_template('dashboard.html', error=error)
 
 app.wsgi_app = ProxyFix(app.wsgi_app)
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
