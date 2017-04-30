@@ -28,7 +28,12 @@ def login_required(f):
 # TODO: HomePage
 @app.route('/')
 def index():
-    return render_template('home.html')
+    data = Videos.query.all()
+    if len(data) > 0:
+        return render_template('home.html', videos=data)
+    else:
+        msg = 'No Videos Found'
+        return render_template('home.html', msg=msg)
 
 
 # TODO: About
