@@ -151,8 +151,8 @@ def dashboard():
         return render_template('dashboard.html', msg=msg)
 
 
-# TODO: Edit Article
-@app.route('/edit_video/<string:id>/', methods=['GET', 'POST'])
+# TODO: Edit Video
+@app.route('/edit_video/<int:id>/', methods=['GET', 'POST'])
 @login_required
 def edit_video(id):
     data = Videos.query.get(id)
