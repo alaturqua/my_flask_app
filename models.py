@@ -45,6 +45,7 @@ class Videos(db.Model):
 
 
 class Comments(db.Model):
+    '__comments__'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.TIMESTAMP)
