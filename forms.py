@@ -19,3 +19,7 @@ class RegisterForm(FlaskForm):
 class VideoForm(FlaskForm):
     title = StringField(label='Title', validators=[validators.Length(min=1, max=200)])
     link = StringField(label='Link', validators=[validators.Length(min=1)])
+
+
+class CommentForm(FlaskForm):
+    comment = StringField('post', validators=[validators.DataRequired()])

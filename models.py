@@ -28,6 +28,11 @@ class Videos(db.Model):
     link = db.Column(db.String)
     author = db.Column(db.TEXT)
     create_date = db.Column(db.TIMESTAMP)
+    comments = db.relationship('Comments', backref='title', lazy='dynamic')
+
+    @staticmethod
+    def get_comments():
+        return Query.query.filter_by(video_id=videos.id).order_by(Comments.timestamp.desc())
 
     def __init__(self, title, link, author):
         self.title = title
@@ -36,4 +41,14 @@ class Videos(db.Model):
         self.create_date = datetime.now()
 
     def __repr__(self):
-        return '<Videos {}'.format(self.title)
+        return '<Videos {}>'.format(self.title)
+
+
+class Comments(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.TIMESTAMP)
+    video_id = db.Column(db.Integer, db.ForeignKey('videos.id'))
+
+    def __repr__(self):
+        return 'Comments {}>'.format(self.body)
