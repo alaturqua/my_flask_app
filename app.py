@@ -164,9 +164,8 @@ def dashboard():
 def edit_video(id):
     data = Videos.query.get(id)
     form = VideoForm(request.form)
-
     form.title.data = data.title
-    form.title.link = data.link
+    form.link.data = data.link
     if request.method == 'POST' and form.validate():
         data.title = request.form["title"]
         data.link = request.form["link"]
