@@ -4,8 +4,8 @@ from flask import render_template, flash, request, redirect, url_for, session
 from passlib.hash import sha256_crypt
 
 from config import app, db
-from forms import RegisterForm, VideoForm
-from models import Users, Videos
+from forms import RegisterForm, VideoForm, CommentForm
+from models import Users, Videos, Comments
 
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -108,12 +108,19 @@ def videos():
 
 
 # TODO: Video Details
-@app.route('/video/<int:id>/')
+@app.route('/video/<int:id>/', methods=['GET', 'POST'])
 def video(id):
     data = Videos.query.get(id)
-    app.logger.info(data)
+    form = CommentForm(request.form)
+    if request.method == 'POST' and form.validate():
+        comment_candidate = form.comment.data
+        comment = Comments(body=comment_candidate, video_id=data.id)
+        db.session.add(comment)
+        db.session.commit()
+        msg = "Comment added!"
+        return render_template('video.html', video=data, form=form, msg=msg)
     if data:
-        return render_template('video.html', video=data)
+        return render_template('video.html', video=data, form=form)
     else:
         msg = "No video found!"
         return render_template('video.html', msg=msg)

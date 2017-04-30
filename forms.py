@@ -22,4 +22,4 @@ class VideoForm(FlaskForm):
 
 
 class CommentForm(FlaskForm):
-    comment = StringField('post', validators=[validators.DataRequired()])
+    comment = TextAreaField('Comment', validators=[validators.DataRequired()])
