@@ -20,21 +20,24 @@
         <div class="row">
             <div class="col md-12">
                 <h2>Comments</h2>
-                <form role="form" method="POST">
-                    {{ form.hidden_tag() }}
-                    <div class="form-group">
-                        {{ render_field(form.comment, class_="form-control", id="editor") }}
-                    </div>
-                    <input type="submit" class="btn btn-primary" value="Submit">
-                </form>
-                <hr>
+                {% if session.logged_in %}
+                    <form role="form" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ render_field(form.comment, class_="form-control", id="editor") }}
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                    <hr>
+                {% endif %}
 
 
                 {% if video.comments %}
                     {% if video.comments.count() > 0 %}
                         {% for comment in video.get_comments() %}
                             <div class="well">
-                                <small> {{ comment.users.username }} on {{ comment.timestamp.strftime('%d %B %Y at %I:%M:%S') }}</small>
+                                <small> {{ comment.users.username }}
+                                    on {{ comment.timestamp.strftime('%d %B %Y at %I:%M:%S') }}</small>
                                 <p>{{ comment.body | safe }}</p>
                             </div>
 
