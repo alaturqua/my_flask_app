@@ -30,14 +30,23 @@ class Videos(db.Model):
     '__videos__'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     title = db.Column(db.TEXT, unique=True)
-    link = db.Column(db.String)
+    # link = db.Column(db.String)
     author = db.Column(db.TEXT)
+    likes = db.Column(db.Integer)
     create_date = db.Column(db.TIMESTAMP, default=datetime.now)
     comments = db.relationship('Comments', backref='videos', lazy='dynamic')
 
+    # @staticmethod
+    # def like_video():
+    #     Videos.likes += 1
+
+    # @staticmethod
+    # def dislike_video():
+    #     Videos.likes -= 1
+
     @staticmethod
     def get_comments():
-        return Comments.query.filter_by(video_id=videos.id).order_by(Comments.timestamp.desc())
+        return Comments.query.filter_by(video_id=Videos.id).order_by(Comments.timestamp.desc())
 
     def __init__(self, title, link, author):
         self.title = title
@@ -56,9 +65,10 @@ class Comments(db.Model):
     video_id = db.Column(db.Integer, db.ForeignKey('videos.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, body, video_id):
+    def __init__(self, body, video_id, user_id):
         self.body = body
         self.video_id = video_id
+        self.user_id = user_id
 
     def __repr__(self):
         return 'Comments {}>'.format(self.body)

@@ -10,14 +10,7 @@
                                 frameborder="0" allowfullscreen></iframe>
                         <span class="card-title">{{ video.title }}</span>
                     </div>
-
-                    <div class="card-content">
-                        <p>Cards for display in portfolio style material design by Google.</p>
-                    </div>
-
                     <div class="card-action">
-                        <a class="btn btn-primary btn-sm" href="/video/{{ video.id }}" target="new_blank">Video</a>
-
                     </div>
                 </div>
             </div>
@@ -39,9 +32,9 @@
 
                 {% if video.comments %}
                     {% if video.comments.count() > 0 %}
-                        {% for comment in video.comments %}
+                        {% for comment in video.get_comments() %}
                             <div class="well">
-                                <small>{{ comment.timestamp }}</small>
+                                <small> {{ comment.users.username }} on {{ comment.timestamp.strftime('%d %B %Y at %I:%M:%S') }}</small>
                                 <p>{{ comment.body | safe }}</p>
                             </div>
 

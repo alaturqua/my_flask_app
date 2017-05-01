@@ -113,8 +113,9 @@ def video(id):
     data = Videos.query.get(id)
     form = CommentForm(request.form)
     if request.method == 'POST' and form.validate():
+        user = Users.query.filter_by(username=data.author).first()
         comment_candidate = form.comment.data
-        comment = Comments(body=comment_candidate, video_id=data.id)
+        comment = Comments(body=comment_candidate, video_id=data.id, user_id=user.id)
         db.session.add(comment)
         db.session.commit()
         msg = "Comment added!"
