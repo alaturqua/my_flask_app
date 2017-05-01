@@ -30,9 +30,9 @@ class Videos(db.Model):
     '__videos__'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     title = db.Column(db.TEXT, unique=True)
-    # link = db.Column(db.String)
+    link = db.Column(db.String)
     author = db.Column(db.TEXT)
-    likes = db.Column(db.Integer)
+    # likes = db.Column(db.Integer)
     create_date = db.Column(db.TIMESTAMP, default=datetime.now)
     comments = db.relationship('Comments', backref='videos', lazy='dynamic')
 
